@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C+G</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Container */
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 90%;
+            width: 600px;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Countdown Grid */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .time-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+
+        .number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 0.5rem;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* Completion Message */
+        #message {
+            display: none;
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700; /* Gold */
+            animation: fadeIn 1s ease-in;
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .countdown {
+                gap: 1rem;
+            }
+
+            .time-segment {
+                min-width: 60px;
+                flex: 1 0 40%; /* 2x2 grid on small screens */
+            }
+
+            .number {
+                font-size: 2rem;
+                padding: 0.8rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <div class="container">
+        <h1>Days until Candice and Gus see each other!</h1>
+        
+        <div id="countdown" class="countdown">
+            <div class="time-segment">
+                <span class="number" id="days">00</span>
+                <span class="label">Days</span>
+            </div>
+            <div class="time-segment">
+                <span class="number" id="hours">00</span>
+                <span class="label">Hours</span>
+            </div>
+            <div class="time-segment">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Minutes</span>
+            </div>
+            <div class="time-segment">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Seconds</span>
+            </div>
+        </div>
+
+        <div id="message">Today is the day!</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const countdownEl = document.getElementById('countdown');
+            const messageEl = document.getElementById('message');
+            const h1El = document.querySelector('h1');
+
+            function getNextJanuary3rd() {
+                const now = new Date();
+                let year = now.getFullYear();
+                // Month is 0-indexed (0 = January)
+                let target = new Date(year, 0, 3);
+
+                // If Jan 3rd has already passed this year, set for next year
+                if (now > target) {
+                    target.setFullYear(year + 1);
+                }
+                
+                return target;
+            }
+
+            const targetDate = getNextJanuary3rd();
+            
+            // Update title with the year for clarity
+            h1El.textContent = `Days until Candice and Gus see each other!`;
+
+            function updateCountdown() {
+                const now = new Date();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    // Timer finished
+                    countdownEl.style.display = 'none';
+                    messageEl.style.display = 'block';
+                    h1El.textContent = "Welcome to January 3rd!";
+                    startConfetti();
+                    clearInterval(interval);
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                daysEl.textContent = days < 10 ? '0' + days : days;
+                hoursEl.textContent = hours < 10 ? '0' + hours : hours;
+                minutesEl.textContent = minutes < 10 ? '0' + minutes : minutes;
+                secondsEl.textContent = seconds < 10 ? '0' + seconds : seconds;
+            }
+
+            const interval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Run immediately to avoid 1s delay
+
+            // --- Simple Confetti Logic (No external libraries) ---
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            let animationId;
+            const particles = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function startConfetti() {
+                for(let i=0; i<100; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height - canvas.height,
+                        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                        size: Math.random() * 10 + 5,
+                        speed: Math.random() * 3 + 2,
+                        angle: Math.random() * 6.2
+                    });
+                }
+                animateConfetti();
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((p, index) => {
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle);
+                    p.angle += 0.1;
+
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+
+                animationId = requestAnimationFrame(animateConfetti);
+            }
+        });
+    </script>
+</body>
+</html>

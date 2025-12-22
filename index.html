@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C+G</title>
+    <!-- Import Cute Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         /* Reset and Base Styles */
         * {
@@ -13,36 +15,52 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Quicksand', sans-serif;
+            /* Cute Pink/Peach Gradient */
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #ffffff;
+            color: #5d4037; /* Softer brown text color instead of harsh white/black */
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating background hearts */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 2rem;
+            animation: floatUp 15s linear infinite;
+            z-index: 0;
+            user-select: none;
         }
 
         /* Container */
         .container {
+            position: relative;
             text-align: center;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 3rem 2rem;
+            /* Glassmorphism with a pink tint */
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 135, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             max-width: 90%;
-            width: 600px;
+            width: 650px;
+            z-index: 2;
         }
 
         h1 {
+            font-family: 'Pacifico', cursive; /* Cute cursive font */
             margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 3rem;
+            color: #d6336c; /* Deep pink */
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+            line-height: 1.2;
         }
 
         /* Countdown Grid */
@@ -57,36 +75,38 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 80px;
+            min-width: 90px;
         }
 
         .number {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.6);
             padding: 1rem 0.5rem;
-            border-radius: 8px;
+            border-radius: 20px;
             width: 100%;
             margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #d6336c;
+            box-shadow: 0 4px 15px rgba(214, 51, 108, 0.15);
             transition: transform 0.2s ease;
         }
 
         .label {
-            font-size: 0.9rem;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #865c6c;
         }
 
         /* Completion Message */
         #message {
             display: none;
             margin-top: 2rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffd700; /* Gold */
-            animation: fadeIn 1s ease-in;
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: #d6336c;
+            animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         /* Confetti Canvas */
@@ -100,47 +120,52 @@
             z-index: 10;
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            opacity: 0.6;
+        /* Animations */
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
         }
 
         /* Mobile Responsiveness */
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .countdown {
-                gap: 1rem;
+                gap: 0.8rem;
             }
 
             .time-segment {
-                min-width: 60px;
-                flex: 1 0 40%; /* 2x2 grid on small screens */
+                min-width: 70px;
+                flex: 1 0 40%; 
             }
 
             .number {
-                font-size: 2rem;
+                font-size: 2.2rem;
                 padding: 0.8rem 0;
+                border-radius: 15px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Hearts -->
+    <div id="bg-hearts-container"></div>
+
     <canvas id="confetti"></canvas>
 
     <div class="container">
-        <h1>Days until Candice and Gus see each other!</h1>
+        <h1>Days until Candice and Gus see each other! ❤️</h1>
         
         <div id="countdown" class="countdown">
             <div class="time-segment">
@@ -149,19 +174,19 @@
             </div>
             <div class="time-segment">
                 <span class="number" id="hours">00</span>
-                <span class="label">Hours</span>
+                <span class="label">Hrs</span>
             </div>
             <div class="time-segment">
                 <span class="number" id="minutes">00</span>
-                <span class="label">Minutes</span>
+                <span class="label">Mins</span>
             </div>
             <div class="time-segment">
                 <span class="number" id="seconds">00</span>
-                <span class="label">Seconds</span>
+                <span class="label">Secs</span>
             </div>
         </div>
 
-        <div id="message">Today is the day!</div>
+        <div id="message">Together at last! ❤️</div>
     </div>
 
     <script>
@@ -172,26 +197,31 @@
             const secondsEl = document.getElementById('seconds');
             const countdownEl = document.getElementById('countdown');
             const messageEl = document.getElementById('message');
-            const h1El = document.querySelector('h1');
-
-            function getNextJanuary3rd() {
+            
+            // --- TIME ZONE LOGIC ---
+            
+            function getTargetDate() {
                 const now = new Date();
-                let year = now.getFullYear();
-                // Month is 0-indexed (0 = January)
-                let target = new Date(year, 0, 3);
+                const currentYear = now.getFullYear();
+                
+                // Construct string for January 3rd at 18:00 (6 PM)
+                // -08:00 represents PST offset specifically (Standard Time)
+                // Note: If you specifically want to handle PDT/PST switching automatically, 
+                // it's complex, but Jan is always PST (-8) in US Pacific.
+                
+                let targetString = `${currentYear}-01-03T18:00:00-08:00`;
+                let targetDate = new Date(targetString);
 
-                // If Jan 3rd has already passed this year, set for next year
-                if (now > target) {
-                    target.setFullYear(year + 1);
+                // If this time has already passed this year, aim for next year
+                if (now > targetDate) {
+                    targetString = `${currentYear + 1}-01-03T18:00:00-08:00`;
+                    targetDate = new Date(targetString);
                 }
                 
-                return target;
+                return targetDate;
             }
 
-            const targetDate = getNextJanuary3rd();
-            
-            // Update title with the year for clarity
-            h1El.textContent = `Days until Candice and Gus see each other!`;
+            const targetDate = getTargetDate();
 
             function updateCountdown() {
                 const now = new Date();
@@ -201,8 +231,7 @@
                     // Timer finished
                     countdownEl.style.display = 'none';
                     messageEl.style.display = 'block';
-                    h1El.textContent = "Welcome to January 3rd!";
-                    startConfetti();
+                    startConfetti(); 
                     clearInterval(interval);
                     return;
                 }
@@ -219,9 +248,36 @@
             }
 
             const interval = setInterval(updateCountdown, 1000);
-            updateCountdown(); // Run immediately to avoid 1s delay
+            updateCountdown(); 
 
-            // --- Simple Confetti Logic (No external libraries) ---
+            // --- Background Floating Hearts ---
+            const bgContainer = document.getElementById('bg-hearts-container');
+            function createFloatingHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('bg-heart');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 10 + 10 + 's';
+                heart.style.opacity = Math.random() * 0.3 + 0.1;
+                heart.style.fontSize = Math.random() * 2 + 1 + 'rem';
+                
+                bgContainer.appendChild(heart);
+
+                // Remove after animation to prevent memory leak
+                setTimeout(() => {
+                    heart.remove();
+                }, 20000);
+            }
+
+            // Create some initial hearts
+            for(let i=0; i<15; i++) {
+                setTimeout(createFloatingHeart, Math.random() * 5000);
+            }
+            // Create more continuously
+            setInterval(createFloatingHeart, 2000);
+
+
+            // --- Canvas Heart Confetti ---
             const canvas = document.getElementById('confetti');
             const ctx = canvas.getContext('2d');
             let animationId;
@@ -235,14 +291,17 @@
             resizeCanvas();
 
             function startConfetti() {
-                for(let i=0; i<100; i++) {
+                // Launch more particles for the celebration
+                for(let i=0; i<150; i++) {
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height - canvas.height,
-                        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                        size: Math.random() * 10 + 5,
-                        speed: Math.random() * 3 + 2,
-                        angle: Math.random() * 6.2
+                        // Colors: Pinks, Reds, Whites
+                        color: `hsl(${330 + Math.random() * 30}, 100%, ${50 + Math.random() * 30}%)`, 
+                        size: Math.random() * 20 + 10,
+                        speed: Math.random() * 4 + 2,
+                        angle: Math.random() * 6.2,
+                        spin: Math.random() * 0.2 - 0.1
                     });
                 }
                 animateConfetti();
@@ -251,16 +310,26 @@
             function animateConfetti() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                particles.forEach((p, index) => {
+                particles.forEach((p) => {
                     p.y += p.speed;
-                    p.x += Math.sin(p.angle);
-                    p.angle += 0.1;
-
+                    p.x += Math.sin(p.angle) * 2;
+                    p.angle += 0.05;
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle); // Rotate the heart
+                    
+                    // Draw Heart text
+                    ctx.font = `${p.size}px Arial`;
                     ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    ctx.textAlign = "center";
+                    ctx.fillText("❤", 0, 0);
+                    
+                    ctx.restore();
 
+                    // Loop particles
                     if (p.y > canvas.height) {
-                        p.y = -20;
+                        p.y = -50;
                         p.x = Math.random() * canvas.width;
                     }
                 });

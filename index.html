@@ -209,12 +209,12 @@
                 // Note: If you specifically want to handle PDT/PST switching automatically, 
                 // it's complex, but Jan is always PST (-8) in US Pacific.
                 
-                let targetString = `${currentYear}-01-03T18:00:00-08:00`;
+                let targetString = `${currentYear}-01-02T18:00:00-08:00`;
                 let targetDate = new Date(targetString);
 
                 // If this time has already passed this year, aim for next year
                 if (now > targetDate) {
-                    targetString = `${currentYear + 1}-01-03T18:00:00-08:00`;
+                    targetString = `${currentYear + 1}-01-02T18:00:00-08:00`;
                     targetDate = new Date(targetString);
                 }
                 

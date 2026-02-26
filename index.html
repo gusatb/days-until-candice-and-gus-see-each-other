@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C+G</title>
-    <!-- Import Cute Fonts -->
+    <title>C+G Countdown</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         /* Reset and Base Styles */
@@ -16,13 +15,12 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            /* Cute Pink/Peach Gradient */
             background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #5d4037; /* Softer brown text color instead of harsh white/black */
+            color: #5d4037; 
             overflow: hidden;
             position: relative;
         }
@@ -42,7 +40,6 @@
             position: relative;
             text-align: center;
             padding: 3rem 2rem;
-            /* Glassmorphism with a pink tint */
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -55,10 +52,10 @@
         }
 
         h1 {
-            font-family: 'Pacifico', cursive; /* Cute cursive font */
+            font-family: 'Pacifico', cursive; 
             margin-bottom: 2rem;
             font-size: 3rem;
-            color: #d6336c; /* Deep pink */
+            color: #d6336c; 
             text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
             line-height: 1.2;
         }
@@ -99,7 +96,6 @@
             color: #865c6c;
         }
 
-        /* Completion Message */
         #message {
             display: none;
             margin-top: 2rem;
@@ -109,7 +105,6 @@
             animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        /* Confetti Canvas */
         #confetti {
             position: absolute;
             top: 0;
@@ -120,7 +115,6 @@
             z-index: 10;
         }
 
-        /* Animations */
         @keyframes floatUp {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             10% { opacity: 0.5; }
@@ -134,34 +128,17 @@
             100% { transform: scale(1); }
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .countdown {
-                gap: 0.8rem;
-            }
-
-            .time-segment {
-                min-width: 70px;
-                flex: 1 0 40%; 
-            }
-
-            .number {
-                font-size: 2.2rem;
-                padding: 0.8rem 0;
-                border-radius: 15px;
-            }
+            h1 { font-size: 2rem; }
+            .countdown { gap: 0.8rem; }
+            .time-segment { min-width: 70px; flex: 1 0 40%; }
+            .number { font-size: 2.2rem; padding: 0.8rem 0; border-radius: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Hearts -->
     <div id="bg-hearts-container"></div>
-
     <canvas id="confetti"></canvas>
 
     <div class="container">
@@ -198,23 +175,18 @@
             const countdownEl = document.getElementById('countdown');
             const messageEl = document.getElementById('message');
             
-            // --- TIME ZONE LOGIC ---
-            
             function getTargetDate() {
                 const now = new Date();
                 const currentYear = now.getFullYear();
                 
-                // Construct string for January 3rd at 18:00 (6 PM)
-                // -08:00 represents PST offset specifically (Standard Time)
-                // Note: If you specifically want to handle PDT/PST switching automatically, 
-                // it's complex, but Jan is always PST (-8) in US Pacific.
-                
-                let targetString = `${currentYear}-01-02T18:00:00-08:00`;
+                // --- UPDATED DATE & TIME ZONE ---
+                // March 10th at 08:00 AM Chile Time (CLST is UTC-3 in March)
+                let targetString = `${currentYear}-03-10T08:00:00-03:00`;
                 let targetDate = new Date(targetString);
 
-                // If this time has already passed this year, aim for next year
+                // If March 10th has already passed this year, set to next year
                 if (now > targetDate) {
-                    targetString = `${currentYear + 1}-01-02T18:00:00-08:00`;
+                    targetString = `${currentYear + 1}-03-10T08:00:00-03:00`;
                     targetDate = new Date(targetString);
                 }
                 
@@ -228,7 +200,6 @@
                 const diff = targetDate - now;
 
                 if (diff <= 0) {
-                    // Timer finished
                     countdownEl.style.display = 'none';
                     messageEl.style.display = 'block';
                     startConfetti(); 
@@ -250,7 +221,7 @@
             const interval = setInterval(updateCountdown, 1000);
             updateCountdown(); 
 
-            // --- Background Floating Hearts ---
+            // --- Decorative Scripts (Hearts & Confetti) ---
             const bgContainer = document.getElementById('bg-hearts-container');
             function createFloatingHeart() {
                 const heart = document.createElement('div');
@@ -260,29 +231,15 @@
                 heart.style.animationDuration = Math.random() * 10 + 10 + 's';
                 heart.style.opacity = Math.random() * 0.3 + 0.1;
                 heart.style.fontSize = Math.random() * 2 + 1 + 'rem';
-                
                 bgContainer.appendChild(heart);
-
-                // Remove after animation to prevent memory leak
-                setTimeout(() => {
-                    heart.remove();
-                }, 20000);
+                setTimeout(() => heart.remove(), 20000);
             }
-
-            // Create some initial hearts
-            for(let i=0; i<15; i++) {
-                setTimeout(createFloatingHeart, Math.random() * 5000);
-            }
-            // Create more continuously
+            for(let i=0; i<15; i++) setTimeout(createFloatingHeart, Math.random() * 5000);
             setInterval(createFloatingHeart, 2000);
 
-
-            // --- Canvas Heart Confetti ---
             const canvas = document.getElementById('confetti');
             const ctx = canvas.getContext('2d');
-            let animationId;
             const particles = [];
-
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
@@ -291,17 +248,14 @@
             resizeCanvas();
 
             function startConfetti() {
-                // Launch more particles for the celebration
                 for(let i=0; i<150; i++) {
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height - canvas.height,
-                        // Colors: Pinks, Reds, Whites
                         color: `hsl(${330 + Math.random() * 30}, 100%, ${50 + Math.random() * 30}%)`, 
                         size: Math.random() * 20 + 10,
                         speed: Math.random() * 4 + 2,
-                        angle: Math.random() * 6.2,
-                        spin: Math.random() * 0.2 - 0.1
+                        angle: Math.random() * 6.2
                     });
                 }
                 animateConfetti();
@@ -309,32 +263,20 @@
 
             function animateConfetti() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
                 particles.forEach((p) => {
                     p.y += p.speed;
-                    p.x += Math.sin(p.angle) * 2;
                     p.angle += 0.05;
-                    
                     ctx.save();
                     ctx.translate(p.x, p.y);
-                    ctx.rotate(p.angle); // Rotate the heart
-                    
-                    // Draw Heart text
+                    ctx.rotate(p.angle);
                     ctx.font = `${p.size}px Arial`;
                     ctx.fillStyle = p.color;
                     ctx.textAlign = "center";
                     ctx.fillText("❤", 0, 0);
-                    
                     ctx.restore();
-
-                    // Loop particles
-                    if (p.y > canvas.height) {
-                        p.y = -50;
-                        p.x = Math.random() * canvas.width;
-                    }
+                    if (p.y > canvas.height) p.y = -50;
                 });
-
-                animationId = requestAnimationFrame(animateConfetti);
+                requestAnimationFrame(animateConfetti);
             }
         });
     </script>

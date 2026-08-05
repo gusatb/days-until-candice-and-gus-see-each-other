@@ -181,12 +181,12 @@
                 
                 // --- UPDATED DATE & TIME ZONE ---
                 // March 10th at 08:00 AM Chile Time (CLST is UTC-3 in March)
-                let targetString = `${currentYear}-07-29T07:00:00-05:00`;
+                let targetString = `${currentYear}-08-14T20:00:00-08:00`;
                 let targetDate = new Date(targetString);
 
                 // If March 10th has already passed this year, set to next year
                 if (now > targetDate) {
-                    targetString = `${currentYear + 1}-07-29T07:00:00-05:00`;
+                    targetString = `${currentYear + 1}-08-14T20:00:00-08:00`;
                     targetDate = new Date(targetString);
                 }
                 

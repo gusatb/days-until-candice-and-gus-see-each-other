@@ -179,14 +179,12 @@
                 const now = new Date();
                 const currentYear = now.getFullYear();
                 
-                // --- UPDATED DATE & TIME ZONE ---
-                // March 10th at 08:00 AM Chile Time (CLST is UTC-3 in March)
-                let targetString = `${currentYear}-08-14T20:00:00-08:00`;
+                // October 2nd at 12:30 PM Pacific Standard Time (UTC-8)
+                let targetString = `${currentYear}-10-02T12:30:00-08:00`;
                 let targetDate = new Date(targetString);
 
-                // If March 10th has already passed this year, set to next year
                 if (now > targetDate) {
-                    targetString = `${currentYear + 1}-08-14T20:00:00-08:00`;
+                    targetString = `${currentYear + 1}-10-02T12:30:00-08:00`;
                     targetDate = new Date(targetString);
                 }
                 
